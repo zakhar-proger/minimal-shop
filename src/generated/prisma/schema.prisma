@@ -15,21 +15,21 @@ datasource db {
 }
 
 model Product {
-  id Int @id @default(autoincrement())
-  name String
-  description String?
-  price Int
+  id              Int      @id @default(autoincrement())
+  name            String
+  description     String?
+  price           Int
   discountPercent Int
-  inHit Boolean
-  createdAt DateTime @default(now())
+  inHit           Boolean
+  createdAt       DateTime @default(now())
 
   images ProductImage[]
 }
 
 model ProductImage {
-  id Int @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   productId Int
-  url String
+  url       String
   createdAt DateTime @default(now())
-  product Product @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
 }
