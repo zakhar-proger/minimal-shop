@@ -169,17 +169,18 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiZWU0ZTRlYjEtOWE3My00NjliLTkxNTMtNTU0ZDUwMzI2MWJmIiwidGVuYW50X2lkIjoiN2QyZWM0YzEyMzM3OGJhY2Q5NTdkZDBiMjVmZWY2OGIwM2M0OTJmNGIzODdmZWNmOGY3Zjg1MTA2NzZkOTY4NCIsImludGVybmFsX3NlY3JldCI6IjNiNjM1ZTNmLTU4NGMtNDgxOC04NGJiLTE0NWIwYjIzODBiOCJ9.4XWimYjh8u6wJpWymEO7iO-66GzWwN1HSqYsfUv8awo"
+        "value": null
       }
     }
   },
   "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Product {\n  id              Int      @id @default(autoincrement())\n  name            String\n  description     String?\n  price           Int\n  discountPercent Int\n  inHit           Boolean\n  createdAt       DateTime @default(now())\n\n  images ProductImage[]\n}\n\nmodel ProductImage {\n  id        Int      @id @default(autoincrement())\n  productId Int\n  url       String\n  createdAt DateTime @default(now())\n  product   Product  @relation(fields: [productId], references: [id])\n}\n",
   "inlineSchemaHash": "03f337135058a24d53ab618449ccc763743179efae3b6d88a8afe1ebf13c5fd5",
-  "copyEngine": false
+  "copyEngine": true
 }
 
 const fs = require('fs')
@@ -216,3 +217,9 @@ const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
 
+// file annotations for bundling tools to include these files
+path.join(__dirname, "query_engine-windows.dll.node");
+path.join(process.cwd(), "src/generated/prisma/query_engine-windows.dll.node")
+// file annotations for bundling tools to include these files
+path.join(__dirname, "schema.prisma");
+path.join(process.cwd(), "src/generated/prisma/schema.prisma")

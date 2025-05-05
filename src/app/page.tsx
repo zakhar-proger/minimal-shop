@@ -1,4 +1,26 @@
+"use client";
+
+import ProductCard from "@/components/ProductCard";
+import { useQuery } from "@tanstack/react-query";
+
+async function fetchData() {
+  const res = await fetch("/api/products");
+  const result = await res.json();
+  return result;
+}
+
 export default function Home() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["products"],
+    queryFn: fetchData,
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) {
+    console.log("Error: " + error);
+    return <div>Error!</div>;
+  }
+
   return (
     <main className="container mx-auto px-4 py-6">
       {/*  Home Section  */}
@@ -44,142 +66,9 @@ export default function Home() {
             Новинки
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {/*  Product Card 1  */}
-            <div className="product-card bg-white rounded-lg shadow-sm overflow-hidden transition duration-300">
-              <div className="relative">
-                <img
-                  src="https://via.placeholder.com/300x300"
-                  alt="Product"
-                  className="w-full h-48 object-cover"
-                />
-                <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                  NEW
-                </span>
-              </div>
-              <div className="p-4">
-                <h3 className="font-medium text-gray-800 mb-1">Умные часы</h3>
-                <div className="flex items-center mb-2">
-                  <div className="flex text-yellow-400">
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star-half-alt"></i>
-                  </div>
-                  <span className="text-xs text-gray-500 ml-1">(24)</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-gray-800">12 990 ₽</span>
-                  <button className="text-primary-600 hover:text-primary-800">
-                    <i className="fas fa-shopping-cart"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/*  Product Card 2  */}
-            <div className="product-card bg-white rounded-lg shadow-sm overflow-hidden transition duration-300">
-              <div className="relative">
-                <img
-                  src="https://via.placeholder.com/300x300"
-                  alt="Product"
-                  className="w-full h-48 object-cover"
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="font-medium text-gray-800 mb-1">
-                  Беспроводные наушники
-                </h3>
-                <div className="flex items-center mb-2">
-                  <div className="flex text-yellow-400">
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="far fa-star"></i>
-                  </div>
-                  <span className="text-xs text-gray-500 ml-1">(42)</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-gray-800">8 490 ₽</span>
-                  <button className="text-primary-600 hover:text-primary-800">
-                    <i className="fas fa-shopping-cart"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/*  Product Card 3  */}
-            <div className="product-card bg-white rounded-lg shadow-sm overflow-hidden transition duration-300">
-              <div className="relative">
-                <img
-                  src="https://via.placeholder.com/300x300"
-                  alt="Product"
-                  className="w-full h-48 object-cover"
-                />
-                <span className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
-                  -15%
-                </span>
-              </div>
-              <div className="p-4">
-                <h3 className="font-medium text-gray-800 mb-1">Смартфон</h3>
-                <div className="flex items-center mb-2">
-                  <div className="flex text-yellow-400">
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                  </div>
-                  <span className="text-xs text-gray-500 ml-1">(87)</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-sm text-gray-500 line-through">
-                      34 990 ₽
-                    </span>
-                    <span className="font-bold text-gray-800 ml-2">
-                      29 990 ₽
-                    </span>
-                  </div>
-                  <button className="text-primary-600 hover:text-primary-800">
-                    <i className="fas fa-shopping-cart"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/*  Product Card 4  */}
-            <div className="product-card bg-white rounded-lg shadow-sm overflow-hidden transition duration-300">
-              <div className="relative">
-                <img
-                  src="https://via.placeholder.com/300x300"
-                  alt="Product"
-                  className="w-full h-48 object-cover"
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="font-medium text-gray-800 mb-1">
-                  Электронная книга
-                </h3>
-                <div className="flex items-center mb-2">
-                  <div className="flex text-yellow-400">
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star-half-alt"></i>
-                  </div>
-                  <span className="text-xs text-gray-500 ml-1">(31)</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-gray-800">9 990 ₽</span>
-                  <button className="text-primary-600 hover:text-primary-800">
-                    <i className="fas fa-shopping-cart"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
+            {data.map((product: any) => {
+              return <ProductCard key={product.id} product={product} />;
+            })}
           </div>
         </div>
 

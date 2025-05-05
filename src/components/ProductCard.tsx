@@ -9,23 +9,26 @@ interface ProductCardPorps {
     discountPercent?: number;
     inHit?: boolean;
     createdAt: Date;
-    images: string[];
+    images: any[];
   };
 }
 
 export default function ProductCard({ product }: ProductCardPorps) {
   return (
     <div className="product-card bg-white rounded-lg shadow-sm overflow-hidden transition duration-300">
-      <div className="relative">
+      <div className="p-5  relative h-48 w-auto">
         <Image
-          src={product.images[0]}
+          src={product.images[0].url}
           alt={product.name}
-          className="w-full h-48 object-cover"
+          width={192} // Оставляем значение 0, чтобы использовать auto width
+          height={192} // Оставляем значение 0, чтобы использовать auto height
+          className="object-contain w-full h-full"
         />
         <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
           NEW
         </span>
       </div>
+
       <div className="p-4">
         <h3 className="font-medium text-gray-800 mb-1">{product.name}</h3>
         <div className="flex items-center mb-2">
