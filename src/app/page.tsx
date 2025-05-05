@@ -2,24 +2,42 @@
 
 import ProductCard from "@/components/ProductCard";
 import { useQuery } from "@tanstack/react-query";
+import ROUTES from "@/config/api";
 
-async function fetchData() {
-  const res = await fetch("/api/products");
-  const result = await res.json();
-  return result;
+async function fetchData({ queryKey }: { queryKey: [string, string] }) {
+  const [, url] = queryKey;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("Network response was not ok");
+  return res.json();
 }
 
 export default function Home() {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["products"],
+  const {
+    data: newProducts,
+    isLoading: newProductsLoading,
+    error: newProductsError,
+  } = useQuery({
+    queryKey: ["newProducts", `${ROUTES.PRODUCTS.NEW}?limit=4`],
     queryFn: fetchData,
   });
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) {
-    console.log("Error: " + error);
-    return <div>Error!</div>;
-  }
+  const {
+    data: hitProducts,
+    isLoading: hitProductsLoading,
+    error: hitProductsError,
+  } = useQuery({
+    queryKey: ["hitProducts", `${ROUTES.PRODUCTS.HITS}?limit=4`],
+    queryFn: fetchData,
+  });
+
+  const {
+    data: discountProducts,
+    isLoading: discountProductsLoading,
+    error: discountProductsError,
+  } = useQuery({
+    queryKey: ["products", `${ROUTES.PRODUCTS.DISCOUNTS}?limit=4`],
+    queryFn: fetchData,
+  });
 
   return (
     <main className="container mx-auto px-4 py-6">
@@ -66,9 +84,13 @@ export default function Home() {
             Новинки
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {data.map((product: any) => {
-              return <ProductCard key={product.id} product={product} />;
-            })}
+            {newProductsLoading ? (
+              <h1>Loading...</h1>
+            ) : (
+              newProducts?.map((product: any) => {
+                return <ProductCard key={product.id} product={product} />;
+              })
+            )}
           </div>
         </div>
 
@@ -79,143 +101,13 @@ export default function Home() {
             Хиты продаж
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {/*  Repeat similar product cards for bestsellers  */}
-            {/*  Product Card 5  */}
-            <div className="product-card bg-white rounded-lg shadow-sm overflow-hidden transition duration-300">
-              <div className="relative">
-                <img
-                  src="https://via.placeholder.com/300x300"
-                  alt="Product"
-                  className="w-full h-48 object-cover"
-                />
-                <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                  TOP
-                </span>
-              </div>
-              <div className="p-4">
-                <h3 className="font-medium text-gray-800 mb-1">Ноутбук</h3>
-                <div className="flex items-center mb-2">
-                  <div className="flex text-yellow-400">
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                  </div>
-                  <span className="text-xs text-gray-500 ml-1">(112)</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-gray-800">64 990 ₽</span>
-                  <button className="text-primary-600 hover:text-primary-800">
-                    <i className="fas fa-shopping-cart"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/*  Product Card 6  */}
-            <div className="product-card bg-white rounded-lg shadow-sm overflow-hidden transition duration-300">
-              <div className="relative">
-                <img
-                  src="https://via.placeholder.com/300x300"
-                  alt="Product"
-                  className="w-full h-48 object-cover"
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="font-medium text-gray-800 mb-1">
-                  Фитнес-браслет
-                </h3>
-                <div className="flex items-center mb-2">
-                  <div className="flex text-yellow-400">
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="far fa-star"></i>
-                  </div>
-                  <span className="text-xs text-gray-500 ml-1">(56)</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-gray-800">3 990 ₽</span>
-                  <button className="text-primary-600 hover:text-primary-800">
-                    <i className="fas fa-shopping-cart"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/*  Product Card 7  */}
-            <div className="product-card bg-white rounded-lg shadow-sm overflow-hidden transition duration-300">
-              <div className="relative">
-                <img
-                  src="https://via.placeholder.com/300x300"
-                  alt="Product"
-                  className="w-full h-48 object-cover"
-                />
-                <span className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
-                  -20%
-                </span>
-              </div>
-              <div className="p-4">
-                <h3 className="font-medium text-gray-800 mb-1">Планшет</h3>
-                <div className="flex items-center mb-2">
-                  <div className="flex text-yellow-400">
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star-half-alt"></i>
-                  </div>
-                  <span className="text-xs text-gray-500 ml-1">(73)</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-sm text-gray-500 line-through">
-                      24 990 ₽
-                    </span>
-                    <span className="font-bold text-gray-800 ml-2">
-                      19 990 ₽
-                    </span>
-                  </div>
-                  <button className="text-primary-600 hover:text-primary-800">
-                    <i className="fas fa-shopping-cart"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/*  Product Card 8  */}
-            <div className="product-card bg-white rounded-lg shadow-sm overflow-hidden transition duration-300">
-              <div className="relative">
-                <img
-                  src="https://via.placeholder.com/300x300"
-                  alt="Product"
-                  className="w-full h-48 object-cover"
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="font-medium text-gray-800 mb-1">
-                  Внешний аккумулятор
-                </h3>
-                <div className="flex items-center mb-2">
-                  <div className="flex text-yellow-400">
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="far fa-star"></i>
-                  </div>
-                  <span className="text-xs text-gray-500 ml-1">(38)</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-gray-800">2 490 ₽</span>
-                  <button className="text-primary-600 hover:text-primary-800">
-                    <i className="fas fa-shopping-cart"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
+            {hitProductsLoading ? (
+              <h1>Loading...</h1>
+            ) : (
+              hitProducts?.map((product: any) => {
+                return <ProductCard key={product.id} product={product} />;
+              })
+            )}
           </div>
         </div>
 
@@ -226,166 +118,13 @@ export default function Home() {
             Скидки
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {/*  Repeat similar product cards for discounts  */}
-            {/*  Product Card 9  */}
-            <div className="product-card bg-white rounded-lg shadow-sm overflow-hidden transition duration-300">
-              <div className="relative">
-                <img
-                  src="https://via.placeholder.com/300x300"
-                  alt="Product"
-                  className="w-full h-48 object-cover"
-                />
-                <span className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
-                  -30%
-                </span>
-              </div>
-              <div className="p-4">
-                <h3 className="font-medium text-gray-800 mb-1">
-                  Беспроводная колонка
-                </h3>
-                <div className="flex items-center mb-2">
-                  <div className="flex text-yellow-400">
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="far fa-star"></i>
-                  </div>
-                  <span className="text-xs text-gray-500 ml-1">(29)</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-sm text-gray-500 line-through">
-                      7 990 ₽
-                    </span>
-                    <span className="font-bold text-gray-800 ml-2">
-                      5 590 ₽
-                    </span>
-                  </div>
-                  <button className="text-primary-600 hover:text-primary-800">
-                    <i className="fas fa-shopping-cart"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/*  Product Card 10  */}
-            <div className="product-card bg-white rounded-lg shadow-sm overflow-hidden transition duration-300">
-              <div className="relative">
-                <img
-                  src="https://via.placeholder.com/300x300"
-                  alt="Product"
-                  className="w-full h-48 object-cover"
-                />
-                <span className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
-                  -25%
-                </span>
-              </div>
-              <div className="p-4">
-                <h3 className="font-medium text-gray-800 mb-1">Игровая мышь</h3>
-                <div className="flex items-center mb-2">
-                  <div className="flex text-yellow-400">
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star-half-alt"></i>
-                  </div>
-                  <span className="text-xs text-gray-500 ml-1">(45)</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-sm text-gray-500 line-through">
-                      4 990 ₽
-                    </span>
-                    <span className="font-bold text-gray-800 ml-2">
-                      3 740 ₽
-                    </span>
-                  </div>
-                  <button className="text-primary-600 hover:text-primary-800">
-                    <i className="fas fa-shopping-cart"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/*  Product Card 11  */}
-            <div className="product-card bg-white rounded-lg shadow-sm overflow-hidden transition duration-300">
-              <div className="relative">
-                <img
-                  src="https://via.placeholder.com/300x300"
-                  alt="Product"
-                  className="w-full h-48 object-cover"
-                />
-                <span className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
-                  -15%
-                </span>
-              </div>
-              <div className="p-4">
-                <h3 className="font-medium text-gray-800 mb-1">Клавиатура</h3>
-                <div className="flex items-center mb-2">
-                  <div className="flex text-yellow-400">
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                  </div>
-                  <span className="text-xs text-gray-500 ml-1">(68)</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-sm text-gray-500 line-through">
-                      5 990 ₽
-                    </span>
-                    <span className="font-bold text-gray-800 ml-2">
-                      5 090 ₽
-                    </span>
-                  </div>
-                  <button className="text-primary-600 hover:text-primary-800">
-                    <i className="fas fa-shopping-cart"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/*  Product Card 12  */}
-            <div className="product-card bg-white rounded-lg shadow-sm overflow-hidden transition duration-300">
-              <div className="relative">
-                <img
-                  src="https://via.placeholder.com/300x300"
-                  alt="Product"
-                  className="w-full h-48 object-cover"
-                />
-                <span className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
-                  -10%
-                </span>
-              </div>
-              <div className="p-4">
-                <h3 className="font-medium text-gray-800 mb-1">Кабель USB-C</h3>
-                <div className="flex items-center mb-2">
-                  <div className="flex text-yellow-400">
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="fas fa-star"></i>
-                    <i className="far fa-star"></i>
-                  </div>
-                  <span className="text-xs text-gray-500 ml-1">(19)</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-sm text-gray-500 line-through">
-                      990 ₽
-                    </span>
-                    <span className="font-bold text-gray-800 ml-2">890 ₽</span>
-                  </div>
-                  <button className="text-primary-600 hover:text-primary-800">
-                    <i className="fas fa-shopping-cart"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
+            {discountProductsLoading ? (
+              <h1>Loading...</h1>
+            ) : (
+              discountProducts?.map((product: any) => {
+                return <ProductCard key={product.id} product={product} />;
+              })
+            )}
           </div>
         </div>
       </section>
