@@ -1,40 +1,42 @@
+import Link from "next/link";
+
 export default function Header() {
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Logo  */}
-          <a href="#" className="flex items-center">
+          <Link href="/" className="flex items-center">
             <span className="text-2xl font-bold text-primary-600">MINIMAL</span>
             <span className="text-2xl font-bold text-secondary-700">SHOP</span>
-          </a>
+          </Link>
 
           {/* Desktop Navigation  */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a
-              href="#"
+            <Link
+              href="/"
               className="text-secondary-700 hover:text-primary-600 font-medium"
             >
               Главная
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              href="/catalog"
               className="text-secondary-700 hover:text-primary-600 font-medium"
             >
               Каталог
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              href="/about"
               className="text-secondary-700 hover:text-primary-600 font-medium"
             >
               О нас
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              href="/contact"
               className="text-secondary-700 hover:text-primary-600 font-medium"
             >
               Контакты
-            </a>
+            </Link>
           </nav>
 
           {/* Icons  */}
@@ -60,30 +62,30 @@ export default function Header() {
         {/* Mobile Menu  */}
         <div className="mobile-menu md:hidden bg-white">
           <div className="flex flex-col space-y-3 py-3">
-            <a
-              href="#"
+            <Link
+              href="/"
               className="block py-2 px-4 text-secondary-700 hover:bg-gray-100 rounded"
             >
               Главная
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              href="/catalog"
               className="block py-2 px-4 text-secondary-700 hover:bg-gray-100 rounded"
             >
               Каталог
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              href="/about"
               className="block py-2 px-4 text-secondary-700 hover:bg-gray-100 rounded"
             >
               О нас
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              href="/contact"
               className="block py-2 px-4 text-secondary-700 hover:bg-gray-100 rounded"
             >
               Контакты
-            </a>
+            </Link>
           </div>
         </div>
       </div>

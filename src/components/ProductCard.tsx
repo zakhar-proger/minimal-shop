@@ -16,7 +16,7 @@ interface ProductCardPorps {
 export default function ProductCard({ product }: ProductCardPorps) {
   return (
     <div className="product-card bg-white rounded-lg shadow-sm overflow-hidden transition duration-300">
-      <div className="p-5  relative h-48 w-auto">
+      <div className="p-5 relative h-48 w-auto">
         <Image
           src={product.images[0].url}
           alt={product.name}

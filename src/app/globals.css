@@ -17,6 +17,11 @@
   --color-secondary-700: #374151;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 body {
   font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
