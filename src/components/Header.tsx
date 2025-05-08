@@ -19,12 +19,12 @@ export default function Header() {
             >
               Главная
             </Link>
-            <Link
+            <a
               href="/catalog"
               className="text-secondary-700 hover:text-primary-600 font-medium"
             >
               Каталог
-            </Link>
+            </a>
             <Link
               href="/about"
               className="text-secondary-700 hover:text-primary-600 font-medium"
