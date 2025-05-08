@@ -10,28 +10,32 @@ export default function Products() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [sort, setSort] = useState("popular"); // 👈 сортировка
+
   const loaderRef = useRef(null);
 
   // Загрузка товаров
-  async function loadProducts() {
-    if (loading || !hasMore) return;
+  async function loadProducts(reset = false) {
+    if (loading || (!hasMore && !reset)) return;
 
     setLoading(true);
-    const res = await fetch(`${ROUTES.PRODUCTS.BASE}?page=${page}&limit=6`);
+    const res = await fetch(
+      `${ROUTES.PRODUCTS.BASE}?page=${reset ? 1 : page}&limit=9&sort=${sort}`
+    );
     const data = await res.json();
 
-    setProducts((prev) => [...prev, ...data]);
+    setProducts((prev) => (reset ? data : [...prev, ...data]));
     setHasMore(data.length === 6);
-    setPage((prev) => prev + 1);
+    setPage((prev) => (reset ? 2 : prev + 1));
     setLoading(false);
   }
 
-  // Загрузка при монтировании первой страницы
+  // Загрузка при монтировании и смене сортировки
   useEffect(() => {
-    loadProducts();
-  }, []);
+    loadProducts(true); // reset=true при смене сортировки
+  }, [sort]);
 
-  // IntersectionObserver для автоподгрузки
+  // IntersectionObserver
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && hasMore && !loading) {
@@ -48,7 +52,7 @@ export default function Products() {
 
   return (
     <div className="flex-1">
-      <Sort />
+      <Sort onChange={setSort} />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {products.map((product: any) => (
           <ProductCard key={product.id} product={product} />
